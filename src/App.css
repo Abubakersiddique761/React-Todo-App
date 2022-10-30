@@ -25,3 +25,34 @@ input {
   background-color: #faf9f8 !important;
   color: #000 !important;
 }
+
+/* Todos Section */
+.todos{
+  width: 100%;
+  padding: .4rem;
+}
+
+.todos table {
+  width: 100%;
+  height: fit-content;
+  overflow-x: scroll;
+  /* border-collapse: collapse; */
+}
+
+th, td {
+  border: .8px solid lightgray;
+  text-align: center;
+  padding: .3rem;
+}
+
+th {
+  background-color: #faf9f8;
+}
+
+tr:hover {
+  background-color: #faf9f8;
+}
+
+.todo .id {
+  width: 10px;
+}
