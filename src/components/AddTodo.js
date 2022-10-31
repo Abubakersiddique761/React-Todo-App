@@ -1,29 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { TextField, Text, PrimaryButton, DatePicker, Checkbox } from '@fluentui/react'
+import React, { useState } from 'react'
+import { TextField, Text, PrimaryButton, DatePicker, Checkbox, MessageBar, MessageBarType } from '@fluentui/react'
+import { useBoolean } from '@fluentui/react-hooks';
 
-let todos = [
-    {
-        "key": 1,
-        "task": "New Task 2",
-        "date": "12/12/12"
-    },
-    {
-        "key": 2,
-        "task": "New Task 2",
-        "date": "11/11/11"
-    },
-    {
-        "key": 3,
-        "task": "New Task 3",
-        "date": "10/10/10"
-    },
-]
-
+// if ( todos.length === 0 ) {
+//     localStorage.setItem("todos", todos);
+// }
 const AddTodo = () => {
 
     const [task, setTask] = useState("")
     const [date, setDate] = useState("")
-    const [allTodo, setAllTodo] = useState(todos)
+    const [allTodo, setAllTodo] = useState([])
+    const [showStatus, { toggle: toggleShowStatus }] = useBoolean(false);
+    const [showError, { toggle: toggleShowError }] = useBoolean(false);
 
     let handleTaskChange = (event) => {
         setTask(event.target.value)
@@ -34,21 +22,28 @@ const AddTodo = () => {
     }
 
 
-    let addNewTodo = () => {
+    let addNewTodo = (event) => {
+        event.preventDefault();
         if (date !== "" & task !== "") {
-
             setAllTodo((arr) => [...arr, { "key": allTodo.length + 1, "task": task, "date": String(date) }])
-            console.log(allTodo.length)
-            console.log(allTodo)
-
+            // localStorage.setItem("todos", allTodo)
         } else {
-            console.log("Empty Task")
+            toggleShowError(true)
+            setTimeout(() => {
+                toggleShowError(false)
+            }, 1500);
         }
     }
 
-    // useEffect(() => {
-
-    // })
+    let taskFinished = (event, key) => {
+        toggleShowStatus(true)
+        setTimeout(() => {
+            toggleShowStatus(false)
+        }, 1000);
+        const newAllTodo = allTodo.filter((_, i) => i !== key);
+        setAllTodo(newAllTodo);
+        // localStorage.setItem("todos", allTodo)
+    }
 
     return (
         <>
@@ -56,24 +51,34 @@ const AddTodo = () => {
                 <Text variant="xxLarge" block className='heading'>An Todo App</Text>
                 <TextField label="Task:" onChange={(event) => handleTaskChange(event)} className="task_inp" autoComplete='off' autoCorrect='on' underlined autoFocus />
                 <DatePicker className='time_inp' onSelectDate={(value) => handleTimeChange(value)} placeholder="Select a date..." ariaLabel="Select a date" />
-                <PrimaryButton text="Add" allowDisabledFocus onClick={addNewTodo} />
+                <PrimaryButton text="Add" allowDisabledFocus onClick={(event) => addNewTodo(event)} />
             </div>
 
             <div className='todos'>
+                {showError && (
+                    <MessageBar role="alert" messageBarType={MessageBarType.warning}>Please fill all the Fields.</MessageBar>
+                )}
                 <table>
                     <thead>
-                        <th colspan="2">Tasks</th>
-                        <th>Date</th>
+                        <th>Tasks</th>
+                        {/* <th>Date</th> */}
                     </thead>
                     <tbody>
-                        {allTodo.map((data) => (
-                            <tr key={data.key} className="todo">
-                                <td className='id'><Checkbox /></td>
-                                <td className='task'>{data.task}</td>
-                                <td className='date'>{data.date}</td>
-                            </tr>
-                        )).reverse()}
+                        {
+                            allTodo.length !== 0
+                                ?
+                                allTodo.map((data, index) => (
+                                    <tr key={data.key} className="todo" id={data.key}>
+                                        <td className='id'><Checkbox label={data.task + ' - ' + data.date} onChange={(event) => taskFinished(event, index)} /></td>
+                                    </tr>
+                                )).reverse()
+                                :
+                                <Text variant="medium" block className='emptyMsg'>You have no Tasks to do !!!</Text>
+                        }
                     </tbody>
+                    {showStatus && (
+                        <MessageBar role="status" messageBarType={MessageBarType.success}>A Task is Finished.</MessageBar>
+                    )}
                 </table>
             </div>
 

@@ -49,10 +49,10 @@ th {
   background-color: #faf9f8;
 }
 
-tr:hover {
-  background-color: #faf9f8;
-}
-
 .todo .id {
   width: 10px;
+}
+
+.emptyMsg {
+  padding: .5rem;
 }
