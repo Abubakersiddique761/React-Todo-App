@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextField, Text, PrimaryButton, DatePicker, Checkbox, MessageBar, MessageBarType } from '@fluentui/react'
 import { useBoolean } from '@fluentui/react-hooks';
 
@@ -9,6 +9,11 @@ const AddTodo = () => {
 
     const [task, setTask] = useState("")
     const [date, setDate] = useState("")
+
+
+    // let todoArray = JSON.parse((localStorage.getItem("todos")))
+    // console.log(String(todoArray[0]).replaceAll("\\", ""))
+
     const [allTodo, setAllTodo] = useState([])
     const [showStatus, { toggle: toggleShowStatus }] = useBoolean(false);
     const [showError, { toggle: toggleShowError }] = useBoolean(false);
@@ -26,7 +31,7 @@ const AddTodo = () => {
         event.preventDefault();
         if (date !== "" & task !== "") {
             setAllTodo((arr) => [...arr, { "key": allTodo.length + 1, "task": task, "date": String(date) }])
-            // localStorage.setItem("todos", allTodo)
+            // localStorage.setItem("todos", JSON.stringify(allTodo));
         } else {
             toggleShowError(true)
             setTimeout(() => {
@@ -42,8 +47,12 @@ const AddTodo = () => {
         }, 1000);
         const newAllTodo = allTodo.filter((_, i) => i !== key);
         setAllTodo(newAllTodo);
-        // localStorage.setItem("todos", allTodo)
+        // localStorage.setItem("todos", JSON.stringify(allTodo));
     }
+
+    useEffect(() => {
+        // localStorage.setItem("todos", JSON.stringify(allTodo));
+    }, [allTodo]);
 
     return (
         <>
