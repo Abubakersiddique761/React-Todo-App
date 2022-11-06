@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "netlify-cli": "^12.1.0",
     "office-ui-fabric-core": "^11.0.1",
     "office-ui-fabric-react": "^7.199.4",
     "react": "^18.2.0",
